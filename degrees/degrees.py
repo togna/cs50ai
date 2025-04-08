@@ -109,10 +109,10 @@ def shortest_path(source, target):
         visited_actors.add(node.action)
         neighbors = neighbors_for_person(node.action)
         for neighbor in neighbors:
-            if neighbor[1] in visited_actors or frontier.contains_state(neighbor[0]):
+            if neighbor[1] in visited_actors:
                 continue
             if neighbor[1] == target:
-                result = [neighbor, (node.state, node.action)]
+                result = [(node.state, node.action), neighbor]
                 while node.parent:
                     result = [(node.parent.state, node.parent.action)] + result
                     node = node.parent
