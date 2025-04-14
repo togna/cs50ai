@@ -1,2 +1,3 @@
 .venv
 degrees/__pycache__
+.DS_Store
