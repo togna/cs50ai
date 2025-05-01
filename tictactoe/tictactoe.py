@@ -3,6 +3,7 @@ Tic Tac Toe Player
 """
 
 import math
+import copy
 
 X = "X"
 O = "O"
@@ -53,10 +54,11 @@ def result(board, action):
     """
     if action not in actions(board):
         raise ValueError("Invalid move")
-    
-    board[action[0]][action[1]] = player(board)
 
-    return board
+    board_copy = copy.deepcopy(board)
+    board_copy[action[0]][action[1]] = player(board)
+
+    return board_copy
 
 
 def winner(board):
@@ -103,10 +105,23 @@ def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
+
+    return minimax_helper(board, {})[0]
+
+
+def minimax_helper(board, memo):
     if terminal(board):
         return None
-    
-    turn = player(board)
-    moves = actions(board)
-    return moves.pop()
 
+    moves = actions(board)
+    for move in moves:
+        test_board = result(board, move)
+        if terminal(test_board):
+            memo[move] = utility(test_board)
+        else:
+            memo[move] = minimax(test_board)[1]
+
+    if player(board) == X:
+        return max(memo, key=memo.get), max(memo.values())
+
+    return min(memo, key=memo.get), min(memo.values())
