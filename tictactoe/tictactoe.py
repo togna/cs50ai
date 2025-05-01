@@ -42,7 +42,7 @@ def actions(board):
     for i in range(len(board)):
         for j in range(len(board[i])):
             if board[i][j] == EMPTY:
-                result += (i, j)
+                result.add((i, j))
 
     return result
 
@@ -103,4 +103,10 @@ def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
-    raise NotImplementedError
+    if terminal(board):
+        return None
+    
+    turn = player(board)
+    moves = actions(board)
+    return moves.pop()
+
