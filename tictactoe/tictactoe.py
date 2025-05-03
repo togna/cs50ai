@@ -106,22 +106,23 @@ def minimax(board):
     Returns the optimal action for the current player on the board.
     """
 
-    return minimax_helper(board, {})[0]
+    return minimax_helper(board)[0]
 
 
-def minimax_helper(board, memo):
+def minimax_helper(board):
     if terminal(board):
         return None
 
     moves = actions(board)
+    move_scores = {}
     for move in moves:
         test_board = result(board, move)
         if terminal(test_board):
-            memo[move] = utility(test_board)
+            move_scores[move] = utility(test_board)
         else:
-            memo[move] = minimax(test_board)[1]
+            move_scores[move] = minimax_helper(test_board)[1]
 
     if player(board) == X:
-        return max(memo, key=memo.get), max(memo.values())
+        return max(move_scores, key=move_scores.get), max(move_scores.values())
 
-    return min(memo, key=memo.get), min(memo.values())
+    return min(move_scores, key=move_scores.get), min(move_scores.values())
