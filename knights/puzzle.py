@@ -37,6 +37,11 @@ knowledge2 = And(
     Or(BKnight, BKnave)
 )
 
+knowledge2.add(Implication(AKnight, Or(And(AKnight, BKnight), And(AKnave, BKnave))))
+knowledge2.add(Implication(AKnave, And(AKnave, BKnight)))
+knowledge2.add(Implication(BKnight, And(AKnave, BKnight)))
+knowledge2.add(Implication(BKnave, Or(And(AKnight, BKnight), And(AKnave, BKnave))))
+
 # Puzzle 3
 # A says either "I am a knight." or "I am a knave.", but you don't know which.
 # B says "A said 'I am a knave'."
