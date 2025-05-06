@@ -26,6 +26,9 @@ knowledge1 = And(
     Or(BKnight, BKnave)
 )
 
+knowledge1.add(Implication(AKnight, And(AKnave, BKnave)))
+knowledge1.add(Implication(AKnave, Not(And(AKnave, BKnave))))
+
 # Puzzle 2
 # A says "We are the same kind."
 # B says "We are of different kinds."
