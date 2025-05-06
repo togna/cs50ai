@@ -15,6 +15,9 @@ knowledge0 = And(
     Or(AKnight, AKnave)
 )
 
+knowledge0.add(Implication(AKnight, And(AKnight, AKnave)))
+knowledge0.add(Implication(AKnave, Not(And(AKnight, AKnave))))
+
 # Puzzle 1
 # A says "We are both knaves."
 # B says nothing.
