@@ -12,7 +12,8 @@ CKnave = Symbol("C is a Knave")
 # Puzzle 0
 # A says "I am both a knight and a knave."
 knowledge0 = And(
-    Or(AKnight, AKnave)
+    Or(AKnight, AKnave),
+    Not(And(AKnight, AKnave))
 )
 
 knowledge0.add(Implication(AKnight, And(AKnight, AKnave)))
@@ -23,7 +24,9 @@ knowledge0.add(Implication(AKnave, Not(And(AKnight, AKnave))))
 # B says nothing.
 knowledge1 = And(
     Or(AKnight, AKnave),
-    Or(BKnight, BKnave)
+    Not(And(AKnight, AKnave)),
+    Or(BKnight, BKnave),
+    Not(And(BKnight, BKnave))
 )
 
 knowledge1.add(Implication(AKnight, And(AKnave, BKnave)))
@@ -34,7 +37,9 @@ knowledge1.add(Implication(AKnave, Not(And(AKnave, BKnave))))
 # B says "We are of different kinds."
 knowledge2 = And(
     Or(AKnight, AKnave),
-    Or(BKnight, BKnave)
+    Not(And(AKnight, AKnave)),
+    Or(BKnight, BKnave),
+    Not(And(BKnight, BKnave))
 )
 
 knowledge2.add(Implication(AKnight, Or(And(AKnight, BKnight), And(AKnave, BKnave))))
@@ -49,9 +54,16 @@ knowledge2.add(Implication(BKnave, Or(And(AKnight, BKnight), And(AKnave, BKnave)
 # C says "A is a knight."
 knowledge3 = And(
     Or(AKnight, AKnave),
+    Not(And(AKnight, AKnave)),
     Or(BKnight, BKnave),
-    Or(CKnight, CKnave)
+    Not(And(BKnight, BKnave)),
+    Or(CKnight, CKnave),
+    Not(And(CKnight, CKnave))
 )
+
+knowledge3.add(Biconditional(BKnight, Biconditional(AKnight, AKnave)))
+knowledge3.add(Biconditional(BKnight, CKnave))
+knowledge3.add(Biconditional(CKnight, AKnight))
 
 
 def main():
