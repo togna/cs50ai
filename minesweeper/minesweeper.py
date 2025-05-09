@@ -1,6 +1,8 @@
 import itertools
 import random
 
+from minesweeper.runner import cells
+
 
 class Minesweeper():
     """
@@ -105,27 +107,36 @@ class Sentence():
         """
         Returns the set of all cells in self.cells known to be mines.
         """
-        raise NotImplementedError
+        if len(cells) == count:
+            return cells
+
+        return set()
 
     def known_safes(self):
         """
         Returns the set of all cells in self.cells known to be safe.
         """
-        raise NotImplementedError
+        if count == 0:
+            return cells
+
+        return set()
 
     def mark_mine(self, cell):
         """
         Updates internal knowledge representation given the fact that
         a cell is known to be a mine.
         """
-        raise NotImplementedError
+        if cell in cells:
+            cells.remove(cell)
+            self.count -= 1
 
     def mark_safe(self, cell):
         """
         Updates internal knowledge representation given the fact that
         a cell is known to be safe.
         """
-        raise NotImplementedError
+        if cell in cells:
+            cells.remove(cell)
 
 
 class MinesweeperAI():
