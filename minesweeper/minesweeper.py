@@ -193,7 +193,11 @@ class MinesweeperAI():
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
         """
-        raise NotImplementedError
+        moves_made.add(cell)
+        mark_safe(cell)
+        new_knowledge = Sentence(get_adjacent_cells(cell), count)
+        new_mines = new_knowledge.known_mines()
+        # for mine in new_mines:
 
     def make_safe_move(self):
         """
@@ -214,3 +218,12 @@ class MinesweeperAI():
             2) are not known to be mines
         """
         raise NotImplementedError
+
+    def get_adjacent_cells(self, cell):
+        adjacent_cells = set()
+        for adjacent in set((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)):
+            adjacent_cell = cell[0] + adjacent[0], cell[1] + adjacent[1]
+            if -1 < adjacent_cell[0] < height and -1 < adjacent_cell[1] < width:
+                adjacent_cells.add(adjacent_cell)
+
+        return adjacent_cells
