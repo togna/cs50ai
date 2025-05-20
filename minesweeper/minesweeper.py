@@ -1,8 +1,6 @@
 import itertools
 import random
 
-from minesweeper.runner import cells
-
 
 class Minesweeper():
     """
@@ -107,8 +105,8 @@ class Sentence():
         """
         Returns the set of all cells in self.cells known to be mines.
         """
-        if len(cells) == count:
-            return cells
+        if len(self.cells) == self.count:
+            return self.cells
 
         return set()
 
@@ -116,8 +114,8 @@ class Sentence():
         """
         Returns the set of all cells in self.cells known to be safe.
         """
-        if count == 0:
-            return cells
+        if self.count == 0:
+            return self.cells
 
         return set()
 
@@ -126,8 +124,8 @@ class Sentence():
         Updates internal knowledge representation given the fact that
         a cell is known to be a mine.
         """
-        if cell in cells:
-            cells.remove(cell)
+        if cell in self.cells:
+            self.cells.remove(cell)
             self.count -= 1
 
     def mark_safe(self, cell):
@@ -135,8 +133,8 @@ class Sentence():
         Updates internal knowledge representation given the fact that
         a cell is known to be safe.
         """
-        if cell in cells:
-            cells.remove(cell)
+        if cell in self.cells:
+            self.cells.remove(cell)
 
 
 class MinesweeperAI():
@@ -163,7 +161,7 @@ class MinesweeperAI():
         self.available_moves = set()
         for i in range(height):
             for j in range(width):
-                available_moves.add((i, j))
+                self.available_moves.add((i, j))
 
     def mark_mine(self, cell):
         """
@@ -198,8 +196,8 @@ class MinesweeperAI():
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
         """
-        moves_made.add(cell)
-        available_moves.remove(cell)
+        self.moves_made.add(cell)
+        self.available_moves.remove(cell)
         mark_safe(cell)
         self.knowledge = [Sentence(get_adjacent_cells(cell), count)] + self.knowledge
         for sentence in self.knowledge:
