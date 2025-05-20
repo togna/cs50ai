@@ -199,6 +199,7 @@ class MinesweeperAI():
                if they can be inferred from existing knowledge
         """
         moves_made.add(cell)
+        available_moves.remove(cell)
         mark_safe(cell)
         self.knowledge = [Sentence(get_adjacent_cells(cell), count)] + self.knowledge
         for sentence in self.knowledge:
@@ -213,7 +214,10 @@ class MinesweeperAI():
         This function may use the knowledge in self.mines, self.safes
         and self.moves_made, but should not modify any of those values.
         """
-        raise NotImplementedError
+        for safe in self.safes:
+            if safe in self.available_moves:
+                return safe
+        return None
 
     def make_random_move(self):
         """
