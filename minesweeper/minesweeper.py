@@ -228,10 +228,10 @@ class MinesweeperAI():
         return available_non_mines[random.randrange(0, len(available_non_mines))]
 
     def mark_cells(self, sentence):
-        for mine in sentence.known_mines():
+        for mine in sentence.known_mines().copy():
             self.mark_mine(mine)
 
-        for safe in sentence.known_safes():
+        for safe in sentence.known_safes().copy():
             self.mark_safe(safe)
 
     def get_adjacent_cells(self, cell):
