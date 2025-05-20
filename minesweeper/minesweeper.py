@@ -199,7 +199,7 @@ class MinesweeperAI():
         self.moves_made.add(cell)
         self.available_moves.remove(cell)
         self.mark_safe(cell)
-        self.knowledge = [Sentence(self.get_adjacent_cells(cell), count)] + self.knowledge
+        self.knowledge = [self.make_sentence(cell, count)] + self.knowledge
         for sentence in self.knowledge:
             self.mark_cells(sentence)
 
@@ -242,3 +242,15 @@ class MinesweeperAI():
                 adjacent_cells.add(adjacent_cell)
 
         return adjacent_cells
+
+    def make_sentence(self, cell, count):
+        adjacent_cells = self.get_adjacent_cells(cell)
+        final_cells = set()
+        final_count = count
+        for adjacent_cell in adjacent_cells:
+            if adjacent_cell not in self.safes and adjacent_cell not in self.mines:
+                final_cells.add(adjacent_cell)
+            elif adjacent_cell not in self.safes:
+                final_count -= 1
+
+        return Sentence(final_cells, final_count)
