@@ -160,6 +160,11 @@ class MinesweeperAI():
         # List of sentences about the game known to be true
         self.knowledge = []
 
+        self.available_moves = set()
+        for i in range(height):
+            for j in range(width):
+                available_moves.add((i, j))
+
     def mark_mine(self, cell):
         """
         Marks a cell as a mine, and updates all knowledge
@@ -195,9 +200,9 @@ class MinesweeperAI():
         """
         moves_made.add(cell)
         mark_safe(cell)
-        new_knowledge = Sentence(get_adjacent_cells(cell), count)
-        new_mines = new_knowledge.known_mines()
-        # for mine in new_mines:
+        self.knowledge = [Sentence(get_adjacent_cells(cell), count)] + self.knowledge
+        for sentence in self.knowledge:
+            mark_cells(sentence)
 
     def make_safe_move(self):
         """
@@ -218,6 +223,13 @@ class MinesweeperAI():
             2) are not known to be mines
         """
         raise NotImplementedError
+
+    def mark_cells(self, sentence):
+        for mine in sentence.known_mintes():
+            mark_mine(mine)
+
+        for safe in sentence.known_safes():
+            mark_safe(safe)
 
     def get_adjacent_cells(self, cell):
         adjacent_cells = set()
