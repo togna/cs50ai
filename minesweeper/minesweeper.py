@@ -198,10 +198,10 @@ class MinesweeperAI():
         """
         self.moves_made.add(cell)
         self.available_moves.remove(cell)
-        mark_safe(cell)
-        self.knowledge = [Sentence(get_adjacent_cells(cell), count)] + self.knowledge
+        self.mark_safe(cell)
+        self.knowledge = [Sentence(self.get_adjacent_cells(cell), count)] + self.knowledge
         for sentence in self.knowledge:
-            mark_cells(sentence)
+            self.mark_cells(sentence)
 
     def make_safe_move(self):
         """
@@ -224,21 +224,21 @@ class MinesweeperAI():
             1) have not already been chosen, and
             2) are not known to be mines
         """
-        available_non_mines = self.available_moves - self.mines
+        available_non_mines = list(self.available_moves - self.mines)
         return available_non_mines[random.randrange(0, len(available_non_mines))]
 
     def mark_cells(self, sentence):
-        for mine in sentence.known_mintes():
-            mark_mine(mine)
+        for mine in sentence.known_mines():
+            self.mark_mine(mine)
 
         for safe in sentence.known_safes():
-            mark_safe(safe)
+            self.mark_safe(safe)
 
     def get_adjacent_cells(self, cell):
         adjacent_cells = set()
-        for adjacent in set((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)):
+        for adjacent in [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]:
             adjacent_cell = cell[0] + adjacent[0], cell[1] + adjacent[1]
-            if -1 < adjacent_cell[0] < height and -1 < adjacent_cell[1] < width:
+            if -1 < adjacent_cell[0] < self.height and -1 < adjacent_cell[1] < self.width:
                 adjacent_cells.add(adjacent_cell)
 
         return adjacent_cells
