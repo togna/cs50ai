@@ -226,7 +226,8 @@ class MinesweeperAI():
             1) have not already been chosen, and
             2) are not known to be mines
         """
-        raise NotImplementedError
+        available_non_mines = self.available_moves - self.mines
+        return available_non_mines[random.randrange(0, len(available_non_mines))]
 
     def mark_cells(self, sentence):
         for mine in sentence.known_mintes():
