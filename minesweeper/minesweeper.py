@@ -199,7 +199,7 @@ class MinesweeperAI():
         self.moves_made.add(cell)
         self.available_moves.remove(cell)
         self.mark_safe(cell)
-        self.knowledge = [self.make_sentence(cell, count)] + self.knowledge
+        self.knowledge = self.infer_subsets(self.make_sentence(cell, count)) + self.knowledge
         for sentence in self.knowledge:
             self.mark_cells(sentence)
 
@@ -254,3 +254,13 @@ class MinesweeperAI():
                 final_count -= 1
 
         return Sentence(final_cells, final_count)
+
+    def infer_subsets(self, new_sentence):
+        inferences = []
+        for sentence in self.knowledge:
+            if new_sentence.cells.issubset(sentence.cells):
+                inferences.append(Sentence(sentence.cells - new_sentence.cells, sentence.count - new_sentence.count))
+            elif sentence.cells.issubset(new_sentence.cells):
+                inferences.append(Sentence(new_sentence.cells - sentence.cells, new_sentence.count - sentence.count))
+
+        return [new_sentence] + inferences
