@@ -199,9 +199,11 @@ class MinesweeperAI():
         self.moves_made.add(cell)
         self.available_moves.remove(cell)
         self.mark_safe(cell)
-        self.knowledge = self.infer_subsets(self.make_sentence(cell, count)) + self.knowledge
+        self.knowledge = [self.make_sentence(cell, count)] + self.knowledge
+        self.prune_empty_sentences()
         for sentence in self.knowledge:
             self.mark_cells(sentence)
+        self.infer_subsets()
 
     def make_safe_move(self):
         """
@@ -243,6 +245,19 @@ class MinesweeperAI():
 
         return adjacent_cells
 
+    def infer_subsets(self):
+        for sentence1 in self.knowledge:
+            for sentence2 in self.knowledge:
+                if sentence1 == sentence2:
+                    continue
+
+                if sentence2.cells.issubset(sentence1.cells):
+                    sentence1.cells -= sentence2.cells
+                    sentence1.count -= sentence2.count
+                elif sentence1.cells.issubset(sentence2.cells):
+                    sentence2.cells -= sentence1.cells
+                    sentence2.count -= sentence1.count
+
     def make_sentence(self, cell, count):
         adjacent_cells = self.get_adjacent_cells(cell)
         final_cells = set()
@@ -255,12 +270,7 @@ class MinesweeperAI():
 
         return Sentence(final_cells, final_count)
 
-    def infer_subsets(self, new_sentence):
-        inferences = []
-        for sentence in self.knowledge:
-            if new_sentence.cells.issubset(sentence.cells):
-                inferences.append(Sentence(sentence.cells - new_sentence.cells, sentence.count - new_sentence.count))
-            elif sentence.cells.issubset(new_sentence.cells):
-                inferences.append(Sentence(new_sentence.cells - sentence.cells, new_sentence.count - sentence.count))
-
-        return [new_sentence] + inferences
+    def prune_empty_sentences(self):
+        for index, sentence in enumerate(self.knowledge):
+            if len(sentence.cells) == 0:
+                self.knowledge.pop(index)
