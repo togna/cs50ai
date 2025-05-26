@@ -59,14 +59,18 @@ def transition_model(corpus, page, damping_factor):
     """
     model = defaultdict(float)
     if len(corpus[page] == 0):
+        probability = 1.0 / float(len(corpus))
         for site in corpus:
-            model[site] += 1.0 / float(len(corpus))
-    else:
-        for site in corpus:
-            model[site] += (1.0 - damping_factor) / float(len(corpus))
+            model[site] += probability
 
+    else:
+        any_probability = (1.0 - damping_factor) / float(len(corpus))
+        for site in corpus:
+            model[site] += any_probability
+
+        link_probability = damping_factor / float(len(corpus[page]))
         for site in corpus[page]:
-            model[site] += damping_factor / float(len(corpus[page]))
+            model[site] += link_probability
 
     return model
 
