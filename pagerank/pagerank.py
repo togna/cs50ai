@@ -2,6 +2,7 @@ import os
 import random
 import re
 import sys
+from collections import defaultdict
 
 DAMPING = 0.85
 SAMPLES = 10000
@@ -58,7 +59,7 @@ def transition_model(corpus, page, damping_factor):
     a link at random chosen from all pages in the corpus.
     """
     model = defaultdict(float)
-    if len(corpus[page] == 0):
+    if len(corpus[page]) == 0:
         probability = 1.0 / float(len(corpus))
         for site in corpus:
             model[site] += probability
@@ -84,7 +85,25 @@ def sample_pagerank(corpus, damping_factor, n):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
+    models = {}
+    for page in corpus.keys():
+        model = transition_model(corpus, page, damping_factor)
+        pages = []
+        weights = []
+        for link, weight in model.items():
+            pages.append(link)
+            weights.append(weight)
+        models[page] = (pages, weights)
+
+    visits = defaultdict(float)
+    page = random.choice(list(corpus.keys()))
+    visit_weight = 1.0 / float(n)
+    visits[page] += visit_weight
+    for i in range(n - 1):
+        page = random.choices(models[page][0], weights=models[page][1])[0]
+        visits[page] += visit_weight
+
+    return visits
 
 
 def iterate_pagerank(corpus, damping_factor):
