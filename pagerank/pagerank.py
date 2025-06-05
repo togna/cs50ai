@@ -116,9 +116,33 @@ def iterate_pagerank(corpus, damping_factor):
     PageRank values should sum to 1.
     """
     ranks = {}
-    initial_weight = 1.0 / float(len(corpus))
+    num_pages = float(len(corpus))
+    initial_weight = 1.0 / num_pages
     for page in corpus.keys():
         ranks[page] = initial_weight
+
+    damped_pr = (1.0 - damping_factor) / num_pages
+    while True:
+        new_ranks = defaultdict(float)
+        for page in new_ranks.keys():
+            new_ranks[page] += damped_pr
+            num_links = float(len(corpus[page]))
+            if num_links > 0:
+                for link in corpus[page]:
+                    new_ranks[link] += damping_factor * ranks[page] / num_links
+            else:
+                for link in corpus.keys():
+                    new_ranks[link] += damping_factor * ranks[page] / num_pages
+
+        within_threshold = True
+        for page in ranks.keys():
+            if abs(ranks[page] - new_ranks[page]) > 0.001:
+                within_threshold = False
+
+        if within_threshold:
+            break
+
+        ranks = new_ranks
 
     return ranks
 
