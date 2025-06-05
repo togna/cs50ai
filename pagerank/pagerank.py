@@ -124,7 +124,7 @@ def iterate_pagerank(corpus, damping_factor):
     damped_pr = (1.0 - damping_factor) / num_pages
     while True:
         new_ranks = defaultdict(float)
-        for page in new_ranks.keys():
+        for page in ranks.keys():
             new_ranks[page] += damped_pr
             num_links = float(len(corpus[page]))
             if num_links > 0:
