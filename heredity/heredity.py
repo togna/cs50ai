@@ -128,6 +128,46 @@ def powerset(s):
     ]
 
 
+def get_num_genes(person, one_gene, two_genes):
+    if person in one_gene:
+        return 1
+    elif person in two_genes:
+        return 2
+
+    return 0
+
+
+def get_parent_probability(parent, one_gene, two_genes):
+    if parent in one_gene:
+        return 0.5
+    elif parent in two_genes:
+        return 1.0 - PROBS["mutation"]
+
+    return PROBS["mutation"]
+
+
+def get_gene_probability(people, person, one_gene, two_genes, have_trait, num_genes):
+    if people[person]["mother"]:
+        mother_prob = get_parent_probability(people[person]["mother"], one_gene, two_genes)
+        father_prob = get_parent_probability(people[person]["father"], one_gene, two_genes)
+
+        if num_genes == 1:
+            return mother_prob * (1.0 - father_prob) + (1.0 - mother_prob) * father_prob
+        elif num_genes == 2:
+            return mother_prob * father_prob
+
+        return (1.0 - mother_prob) * (1.0 - father_prob)
+
+    return PROBS["gene"][num_genes]
+
+
+def get_trait_probability(people, person, have_trait, num_genes):
+    if people[person]["trait"] is None:
+        return PROBS["trait"][num_genes][person in have_trait]
+
+    return 1.0
+
+
 def joint_probability(people, one_gene, two_genes, have_trait):
     """
     Compute and return a joint probability.
@@ -139,7 +179,13 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         * everyone in set `have_trait` has the trait, and
         * everyone not in set` have_trait` does not have the trait.
     """
-    raise NotImplementedError
+    jp = 1.0
+    for person in people.keys():
+        num_genes = get_num_genes(person, one_gene, two_genes)
+        jp *= get_gene_probability(people, person, one_gene, two_genes, have_trait, num_genes)
+        jp *= get_trait_probability(people, person, have_trait, num_genes)
+
+    return jp
 
 
 def update(probabilities, one_gene, two_genes, have_trait, p):
