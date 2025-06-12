@@ -1,6 +1,7 @@
 import sys
 
 from crossword import *
+from queue import Queue
 
 
 class CrosswordCreator():
@@ -137,7 +138,24 @@ class CrosswordCreator():
         Return True if arc consistency is enforced and no domains are empty;
         return False if one or more domains end up empty.
         """
-        raise NotImplementedError
+        queue: Queue = Queue()
+        if arcs is None:
+            for overlap in self.crossword.overlaps.keys():
+                queue.put(overlap)
+        else:
+            for arc in arcs:
+                queue.put(arc)
+
+        while queue.full():
+            x, y = queue.get()
+            if self.revise(x, y):
+                if len(self.domains[x]) == 0:
+                    return False
+
+                for z in self.crossword.neighbors(x) - {y}:
+                    queue.put((x, z))
+
+        return True
 
     def assignment_complete(self, assignment):
         """
