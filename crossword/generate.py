@@ -116,12 +116,15 @@ class CrosswordCreator():
         """
         revised: bool = False
         for vars, indices in self.crossword.overlaps.items():
-            if vars == (x, y):
+            if vars == (x, y) and indices is not None:
+                x_index = indices[0]
+                y_index = indices[1]
                 for x_word in self.domains[x].copy():
                     overlap = False
                     for y_word in self.domains[y]:
-                        if x_word[indices[0]] == y_word[indices[1]]:
+                        if x_word[x_index] == y_word[y_index]:
                             overlap = True
+                            break
 
                     if not overlap:
                         self.domains[x].remove(x_word)
@@ -146,14 +149,14 @@ class CrosswordCreator():
             for arc in arcs:
                 queue.put(arc)
 
-        while queue.full():
+        while not queue.empty():
             x, y = queue.get()
             if self.revise(x, y):
                 if len(self.domains[x]) == 0:
                     return False
 
                 for z in self.crossword.neighbors(x) - {y}:
-                    queue.put((x, z))
+                    queue.put((z, x))
 
         return True
 
