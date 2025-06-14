@@ -200,13 +200,20 @@ class CrosswordCreator():
         The first value in the list, for example, should be the one
         that rules out the fewest values among the neighbors of `var`.
         """
-        result: List = list()
+        constraints_per_word: List = list()
         assigned: Set = set(assignment.values())
         for word in self.domains[var]:
             if word not in assigned:
-                result.append(word)
+                constraints: int = 0
+                for neighbor in self.crossword.neighbors(var):
+                    overlap = self.crossword.overlaps[var, neighbor]
+                    for word2 in self.domains[neighbor]:
+                        if word[overlap[0]] != word2[overlap[1]]:
+                            constraints += 1
 
-        return result
+                constraints_per_word.append((word, constraints))
+
+        return [word[0] for word in sorted(constraints_per_word, key=lambda constraint: constraint[1])]
 
     def select_unassigned_variable(self, assignment):
         """
