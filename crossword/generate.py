@@ -176,7 +176,22 @@ class CrosswordCreator():
         Return True if `assignment` is consistent (i.e., words fit in crossword
         puzzle without conflicting characters); return False otherwise.
         """
-        raise NotImplementedError
+        for var, word in assignment.items():
+            if var.length != len(word):
+                return False
+
+        for vars, indices in self.crossword.overlaps.items():
+            if indices and assignment.get(vars[0]) and assignment.get(vars[1]) and assignment[vars[0]][indices[0]] != assignment[vars[1]][indices[1]]:
+                return False
+
+        word_set: Set = set()
+        for word in assignment.values():
+            set_size = len(word_set)
+            word_set.add(word)
+            if len(word_set) == set_size:
+                return False
+
+        return True
 
     def order_domain_values(self, var, assignment):
         """
