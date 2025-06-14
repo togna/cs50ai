@@ -224,7 +224,7 @@ class CrosswordCreator():
         return values.
         """
         unassigned: List = [(var, len(self.domains[var]), len(self.crossword.neighbors(var))) for var in self.crossword.variables if var not in assignment.keys()]
-        return [var[0] for var in sorted(unassigned, key=lambda x: (x[1], -x[2]))]
+        return [var[0] for var in sorted(unassigned, key=lambda x: (x[1], -x[2]))][0]
 
     def backtrack(self, assignment):
         """
