@@ -112,12 +112,15 @@ def load_data(filename):
     labels = list()
     with open(filename) as f:
         reader = csv.reader(f)
-        next(reader) # skip headers
+        next(reader)  # skip headers
 
         for row in reader:
-            row_evidence = [int(row[0]), float(row[1]), int(row[2]), float(row[3]), int(row[4]), float(row[5]),
-                            float(row[6]), float(row[7]), float(row[8]), float(row[9]), get_month(row[10]),
-                            int(row[11]), int(row[12]), int(row[13]), int(row[14]), get_visitor_type(row[15]),
+            row_evidence = [int(row[0]), float(row[1]), int(row[2]),
+                            float(row[3]), int(row[4]), float(row[5]),
+                            float(row[6]), float(row[7]), float(row[8]),
+                            float(row[9]), get_month(row[10]),
+                            int(row[11]), int(row[12]), int(row[13]),
+                            int(row[14]), get_visitor_type(row[15]),
                             convert_csv_boolean(row[16])]
             evidence.append(row_evidence)
             labels.append(convert_csv_boolean(row[17]))
