@@ -31,6 +31,54 @@ def main():
     print(f"True Negative Rate: {100 * specificity:.2f}%")
 
 
+def get_month(month_string):
+    match month_string:
+        case "Jan":
+            return 0
+        case "Feb":
+            return 1
+        case "Mar":
+            return 2
+        case "Apr":
+            return 3
+        case "May":
+            return 4
+        case "June":
+            return 5
+        case "Jul":
+            return 6
+        case "Aug":
+            return 7
+        case "Sep":
+            return 8
+        case "Oct":
+            return 9
+        case "Nov":
+            return 10
+        case "Dec":
+            return 11
+        case _:
+            raise ValueError("Unrecognized month: " + month_string)
+
+
+def get_visitor_type(type_string):
+    match type_string:
+        case "Returning_Visitor":
+            return 1
+        case _:
+            return 0
+
+
+def convert_csv_boolean(boolean_string):
+    match boolean_string:
+        case "TRUE":
+            return 1
+        case "FALSE":
+            return 0
+        case _:
+            raise ValueError("Unrecognized boolean: " + boolean_string)
+
+
 def load_data(filename):
     """
     Load shopping data from a CSV file `filename` and convert into a list of
@@ -59,7 +107,21 @@ def load_data(filename):
     labels should be the corresponding list of labels, where each label
     is 1 if Revenue is true, and 0 otherwise.
     """
-    raise NotImplementedError
+    evidence = list()
+    labels = list()
+    with open(filename) as f:
+        reader = csv.reader(f)
+        next(reader) # skip headers
+
+        for row in reader:
+            row_evidence = [int(row[0]), float(row[1]), int(row[2]), float(row[3]), int(row[4]), float(row[5]),
+                            float(row[6]), float(row[7]), float(row[8]), float(row[9]), get_month(row[10]),
+                            int(row[11]), int(row[12]), int(row[13]), int(row[14]), get_visitor_type(row[15]),
+                            convert_csv_boolean(row[16])]
+            evidence.append(row_evidence)
+            labels.append(convert_csv_boolean(row[17]))
+
+    return evidence, labels
 
 
 def train_model(evidence, labels):
