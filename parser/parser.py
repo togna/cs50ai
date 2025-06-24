@@ -27,6 +27,7 @@ grammar = nltk.CFG.fromstring(NONTERMINALS + TERMINALS)
 parser = nltk.ChartParser(grammar)
 nltk.download('punkt_tab')
 
+
 def main():
 
     # If filename specified, read sentence from file
