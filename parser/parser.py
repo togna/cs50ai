@@ -1,4 +1,5 @@
 import nltk
+import re
 import sys
 
 TERMINALS = """
@@ -20,7 +21,7 @@ S -> N V
 
 grammar = nltk.CFG.fromstring(NONTERMINALS + TERMINALS)
 parser = nltk.ChartParser(grammar)
-
+nltk.download('punkt_tab')
 
 def main():
 
@@ -62,7 +63,8 @@ def preprocess(sentence):
     and removing any word that does not contain at least one alphabetic
     character.
     """
-    raise NotImplementedError
+    tokenized = nltk.tokenize.word_tokenize(sentence)
+    return [word.lower() for word in tokenized if re.search('[a-zA-Z]', word)]
 
 
 def np_chunk(tree):
