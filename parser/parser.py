@@ -88,7 +88,7 @@ def np_chunk(tree):
                 containsNp = True
 
         if not containsNp:
-            result.add(subtree)
+            result.append(subtree)
 
     return result
 
